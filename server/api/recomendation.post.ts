@@ -1,15 +1,13 @@
 import { openai } from "../utils/auth";
 
-export default defineEventHandler(async event => {
+export default defineEventHandler(async (event) => {
   const { text }: { text: string } = await readBody(event);
   const response = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt:
-      `Write for my ${text} divulgation twitter account a tweet funny tweet about data.\n` +
-      `Write it in a natural way. Add some hashtags.`,
-    stop: ["\n"],
-    max_tokens: 7,
-    temperature: 0
+    prompt: `You are a ${text} developer. Write a funny tweet for your twitter account about being a ${text}.  Write it in a natural way, not hashtags, not #. `,
+    max_tokens: 256,
+    frequency_penalty: 0,
+    temperature: 1
   });
   console.log("response", response.data);
 

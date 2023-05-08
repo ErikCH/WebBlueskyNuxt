@@ -4,6 +4,7 @@ import { ref, onMounted } from "vue";
 import NewPost from "@/components/new-post.vue";
 const skeetText = ref("");
 const api = ref<FeedViewPost[]>([]);
+const background = useState("background", () => false);
 
 onMounted(async () => {
   await grabTimeline();
@@ -14,12 +15,19 @@ async function grabTimeline() {
   api.value = val;
 }
 
-async function getRecommendation() {
-  const getRecommendation = await $fetch("/api/recomendation", {
+async function getRecommendation(str: string) {
+  if (str === "Choose") return;
+  background.value = true;
+  const recommendation = await $fetch("/api/recomendation", {
     method: "POST",
-    body: { text: "Data Science" }
+    body: { text: str }
   });
-  console.log("get recommendation", getRecommendation);
+  skeetText.value = recommendation
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^"(.*)"$/, "$1")
+    .replace(/\#[^\s]*/g, "");
+  background.value = false;
 }
 
 async function postSkeet() {
@@ -35,11 +43,14 @@ async function postSkeet() {
 </script>
 
 <template>
-  <h1 class="text-3xl text-green-500 text-center mb-10">Bluesky Web Client</h1>
+  <h1 class="text-4xl text-blue-500 text-center mb-10">Bluesky Web Client</h1>
 
   <div class="flex flex-col items-center gap-6">
-    <button @click="getRecommendation">Test</button>
-    <new-post v-model="skeetText" :post-skeet="postSkeet" />
+    <new-post
+      :get-recommendation="getRecommendation"
+      v-model="skeetText"
+      :post-skeet="postSkeet"
+    />
 
     <section
       v-for="{ post, reply } in api"
