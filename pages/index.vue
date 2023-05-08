@@ -14,6 +14,14 @@ async function grabTimeline() {
   api.value = val;
 }
 
+async function getRecommendation() {
+  const getRecommendation = await $fetch("/api/recomendation", {
+    method: "POST",
+    body: { text: "Data Science" }
+  });
+  console.log("get recommendation", getRecommendation);
+}
+
 async function postSkeet() {
   if (!skeetText.value) return;
   const sendSkeet = await $fetch("/api/skeet", {
@@ -30,6 +38,7 @@ async function postSkeet() {
   <h1 class="text-3xl text-green-500 text-center mb-10">Bluesky Web Client</h1>
 
   <div class="flex flex-col items-center gap-6">
+    <button @click="getRecommendation">Test</button>
     <new-post v-model="skeetText" :post-skeet="postSkeet" />
 
     <section

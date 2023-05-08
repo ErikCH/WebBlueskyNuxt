@@ -1,4 +1,5 @@
 import { BskyAgent, AtpSessionData } from "@atproto/api";
+import { Configuration, OpenAIApi } from "openai";
 
 let savedSessionData: AtpSessionData;
 import { readFile } from "node:fs/promises";
@@ -30,3 +31,8 @@ export async function login() {
   }
   return agent;
 }
+const configuration = new Configuration({
+  organization: process.env.OPENAI_ORG,
+  apiKey: process.env.OPENAI_API
+});
+export const openai = new OpenAIApi(configuration);
