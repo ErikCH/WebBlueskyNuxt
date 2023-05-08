@@ -13,7 +13,7 @@ export async function login() {
     console.log("Already logged in...");
   }
   console.log("Logging in...");
-  // See if we have saved session data
+  // See if we have saved session datas
   const sesh = await readFile("./session.json", { encoding: "utf-8" }).catch(
     () => null
   );
